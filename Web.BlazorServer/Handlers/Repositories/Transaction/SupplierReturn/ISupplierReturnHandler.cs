@@ -1,5 +1,6 @@
 ﻿using Application.DataTransferObjects.Transactions.SupplierReturn;
 using Shared.Entities;
+using Web.BlazorServer.ViewModels.Others;
 using Web.BlazorServer.ViewModels.Transaction.Receiving;
 using Web.BlazorServer.ViewModels.Transaction.SupplierReturn;
 

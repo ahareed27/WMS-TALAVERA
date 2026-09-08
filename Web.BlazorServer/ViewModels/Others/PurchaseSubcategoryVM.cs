@@ -1,4 +1,4 @@
-﻿namespace Web.BlazorServer.ViewModels.Transaction.SupplierReturn;
+﻿namespace Web.BlazorServer.ViewModels.Others;
 
 public class PurchaseSubcategoryVM
 {

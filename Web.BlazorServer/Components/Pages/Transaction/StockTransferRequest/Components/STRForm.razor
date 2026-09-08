@@ -42,6 +42,7 @@
                             <RadzenDatePicker Disabled="@Disabled" DateFormat="d" ShowTime="false" ReadOnly @bind-Value="@Model.Date" />
                         </RadzenFormField>
                     </RadzenColumn>
+                    
                     <RadzenColumn SizeLG="@(Model.IsReturn ? 3 : 6)" SizeMD="@(Model.IsReturn ? 6 : 12)">
                         <RadzenFormField Visible="@(!Model.IsReturn)" AllowFloatingLabel="false" Text="Transfer Category" class="rz-w-100">
                             <RadzenTextBox Disabled="@Disabled" ReadOnly Value="@Model.Category.Name" />
@@ -75,6 +76,27 @@
                             </Helper>
                         </RadzenFormField>
                     </RadzenColumn>
+
+                    <RadzenColumn SizeLG="6" SizeMD="12" Visible="@(!Model.IsReturn)">
+                        <RadzenFormField Text="Purchase Category" class="rz-w-100">
+                            <ChildContent>
+                                <RadzenTextBox Disabled="Disabled" Visible="@ReadOnly" Value="@Model.PurchaseCategory?.Name" Placeholder="No purchase category given" />
+                                <QuickVirtualizedDropdown Disabled="Disabled" Name="str_purchase_category" @bind-Value:get="@Model.PurchaseCategory" @bind-Value:set="@PurchaseCategorySet" Visible="@(!ReadOnly)" TItem="PurchaseCategoryVM" DataGetter="@PurchaseCategoryProvider" TextProperty="@nameof(PurchaseCategoryVM.Name)" />
+                            </ChildContent>
+                            <Helper>
+                                <RadzenRequiredValidator Visible="@(!ReadOnly)" Component="str_purchase_category" />
+                            </Helper>
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn SizeLG="6" SizeMD="12" Visible="@(!Model.IsReturn)">
+                        <RadzenFormField Text="Purchase Subcategory" class="rz-w-100">
+                            <ChildContent>
+                                <RadzenTextBox Disabled="Disabled" Visible="@ReadOnly" Value="@Model.PurchaseSubcategory?.Name" Placeholder="No purchase subcategory given" />
+                                <QuickVirtualizedDropdown @ref="@PurchaseSubcategoryDropdown" @bind-Value="@Model.PurchaseSubcategory" Visible="@(!ReadOnly)" TItem="PurchaseSubcategoryVM" DataGetter="@PurchaseSubcategoryProvider" TextProperty="@nameof(PurchaseSubcategoryVM.Name)" Disabled="@(Model.PurchaseCategory is null || Disabled)" />
+                            </ChildContent>
+                        </RadzenFormField>
+                    </RadzenColumn>
+
                     <RadzenColumn SizeLG="@(Model.IsIntercompany ? 3 : 6)" SizeMD="@(Model.IsIntercompany ? 6 : 12)">
                         <RadzenFormField AllowFloatingLabel="@(!ReadOnly)" Text="Subsidiary" class="rz-w-100">
                             <ChildContent>

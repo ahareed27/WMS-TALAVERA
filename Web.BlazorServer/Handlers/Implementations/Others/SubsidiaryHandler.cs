@@ -1,4 +1,5 @@
 ﻿using Application.UseCases.Queries.Others;
+using Application.UseCases.Queries.Transaction.SupplierReturn;
 using Mapster;
 using MediatR;
 using Shared.Entities;
@@ -52,5 +53,32 @@ public class SubsidiaryHandler(IHttpContextAccessor contextAccessor, ISender sen
         GetSubsidiariesByCustomerQry query = new(intent, customerId);
         (var data, int count) = await sender.Send(query);
         return (data.Adapt<IEnumerable<SubsidiaryVM>>(), count);
+    }
+
+    public async Task<(IEnumerable<PurchaseCategoryVM> Data, int Count)> GetPurchaseCategoriesAsync(DataGridIntent intent)
+    {
+        GetPurchaseCategoriesQry query = new(intent);
+        (var data, int count) = await sender.Send(query);
+        return (data.Adapt<IEnumerable<PurchaseCategoryVM>>(), count);
+    }
+
+    public async Task<(IEnumerable<PurchaseSubcategoryVM> Data, int Count)> GetPurchaseSubCategoriesAsync(PurchaseCategoryVM category, DataGridIntent intent)
+    {
+        var newIntent = intent.Adapt<DataGridIntent>();
+        newIntent.Filters.Add(
+            DataGridFilterUtilities.Equal(nameof(PurchaseSubcategoryVM.PurchaseCategoryId), category.Id)
+        );
+        newIntent.Take = 10;
+
+        GetPurchaseSubcategoriesQry query = new(newIntent);
+        (var data, int count) = await sender.Send(query);
+
+        //if (category.Id == 3)
+        //{
+        //    data = data.Where(x => x.Id == 5).ToList();
+        //    count = data.Count();
+        //}
+
+        return (data.Adapt<IEnumerable<PurchaseSubcategoryVM>>(), count);
     }
 }

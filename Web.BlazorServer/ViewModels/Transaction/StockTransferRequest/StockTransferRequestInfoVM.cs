@@ -13,6 +13,8 @@ public class StockTransferRequestInfoVM
     public SubsidiaryVM? Subsidiary { get; set; } = null;
     public SubsidiaryVM? ToSubsidiary { get; set; } = null;
     public TransferOrderStatusVM Status { get; set; } = new();
+    public PurchaseCategoryVM? PurchaseCategory { get; set; } = null;
+    public PurchaseSubcategoryVM? PurchaseSubcategory { get; set; } = null;
     public string PreparedBy { get; set; } = string.Empty;
     public string Remarks { get; set; } = string.Empty;
     public DateTime Date { get; set; }

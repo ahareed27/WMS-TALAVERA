@@ -51,6 +51,8 @@ public partial class STRForm
     private QuickVirtualizedDropdown<LocationVM>? SourceLocationDropdown { get; set; }
     private QuickVirtualizedDropdown<LocationVM>? DestinationLocationDropdown { get; set; }
     private QuickVirtualizedDropdown<VendorVM>? VendorDropdown { get; set; }
+    QuickVirtualizedDropdown<PurchaseSubcategoryVM> PurchaseSubcategoryDropdown { get; set; } = default!;
+
 
     private List<TransferCategory> ReturnCategories = [.. TransferCategory.ReturnCategories];
 
@@ -240,6 +242,36 @@ public partial class STRForm
 
         _concurrencySemaphore.Release();
         return result;
+    }
+
+    async Task<(IEnumerable<PurchaseCategoryVM>, int)> PurchaseCategoryProvider(DataGridIntent intent)
+    {
+        await _concurrencySemaphore.WaitAsync();
+
+        var result = await SubsidiaryHandler.GetPurchaseCategoriesAsync(intent);
+
+        _concurrencySemaphore.Release();
+        return result;
+    }
+
+    async Task<(IEnumerable<PurchaseSubcategoryVM>, int)> PurchaseSubcategoryProvider(DataGridIntent intent)
+    {
+        await _concurrencySemaphore.WaitAsync();
+
+        if (Model.PurchaseCategory is null) return ([], 0);
+        var result = await SubsidiaryHandler.GetPurchaseSubCategoriesAsync(Model.PurchaseCategory, intent);
+
+        _concurrencySemaphore.Release();
+        return result;
+    }
+
+    async Task PurchaseCategorySet(PurchaseCategoryVM? val)
+    {
+        if (Model.PurchaseCategory == val) return;
+        Model.PurchaseCategory = val;
+        Model.PurchaseSubcategory = null;
+
+        PurchaseSubcategoryDropdown.Reset();
     }
 
     async Task<(IEnumerable<ItemUnitVM>, int)> ItemUnitProvider(int itemId, DataGridIntent intent)

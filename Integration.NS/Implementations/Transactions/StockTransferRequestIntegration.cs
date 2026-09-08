@@ -16,6 +16,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Integration.NS.Implementations.Transactions;
 
@@ -35,6 +36,7 @@ internal class StockTransferRequestIntegration(
                     ("TO_CHAR(t.lastmodifieddate, 'YYYY-MM-DD\"T\"HH24:MI:SS')", nameof(StockTransferRequestDataGridNSDTO.DateLastModified)),
                     ("t.tranid", nameof(StockTransferRequestDataGridNSDTO.ReferenceNumber)),
                     ("BUILTIN.DF(t.custbody_dbti_purchase_category)", nameof(StockTransferRequestDataGridNSDTO.PurchaseCategory)),
+                    ("BUILTIN.DF(t.custbody_dbti_purchase_subcategory)", nameof(StockTransferRequestDataGridNSDTO.PurchaseSubcategory)),
                     ("CONCAT(e.firstname,CONCAT(' ',e.lastname))", nameof(StockTransferRequestDataGridNSDTO.PreparedBy)),
                     ("BUILTIN.DF(t.subsidiary)", nameof(StockTransferRequestDataGridNSDTO.Subsidiary)),
                     ("BUILTIN.DF(t.tosubsidiary)", nameof(StockTransferRequestDataGridNSDTO.ToSubsidiary)),
@@ -72,6 +74,7 @@ internal class StockTransferRequestIntegration(
                     ("TO_CHAR(t.lastmodifieddate, 'YYYY-MM-DD\"T\"HH24:MI:SS')", nameof(StockTransferRequestDataGridNSDTO.DateLastModified)),
                     ("t.tranid", nameof(StockTransferRequestDataGridNSDTO.ReferenceNumber)),
                     ("BUILTIN.DF(t.custbody_dbti_purchase_category)", nameof(StockTransferRequestDataGridNSDTO.PurchaseCategory)),
+                    ("BUILTIN.DF(t.custbody_dbti_purchase_subcategory)", nameof(StockTransferRequestDataGridNSDTO.PurchaseSubcategory)),
                     ("CONCAT(e.firstname,CONCAT(' ',e.lastname))", nameof(StockTransferRequestDataGridNSDTO.PreparedBy)),
                     ("BUILTIN.DF(t.subsidiary)", nameof(StockTransferRequestDataGridNSDTO.Subsidiary)),
                     ("BUILTIN.DF(t.tosubsidiary)", nameof(StockTransferRequestDataGridNSDTO.ToSubsidiary)),
@@ -109,6 +112,7 @@ internal class StockTransferRequestIntegration(
                     ("TO_CHAR(t.lastmodifieddate, 'YYYY-MM-DD\"T\"HH24:MI:SS')", nameof(StockTransferRequestDataGridNSDTO.DateLastModified)),
                     ("t.tranid", nameof(StockTransferRequestDataGridNSDTO.ReferenceNumber)),
                     ("BUILTIN.DF(t.custbody_dbti_purchase_category)", nameof(StockTransferRequestDataGridNSDTO.PurchaseCategory)),
+                    ("BUILTIN.DF(t.custbody_dbti_purchase_subcategory)", nameof(StockTransferRequestDataGridNSDTO.PurchaseSubcategory)),
                     ("CONCAT(e.firstname,CONCAT(' ',e.lastname))", nameof(StockTransferRequestDataGridNSDTO.PreparedBy)),
                     ("BUILTIN.DF(t.subsidiary)", nameof(StockTransferRequestDataGridNSDTO.Subsidiary)),
                     ("BUILTIN.DF(t.tosubsidiary)", nameof(StockTransferRequestDataGridNSDTO.ToSubsidiary)),
@@ -149,11 +153,15 @@ internal class StockTransferRequestIntegration(
                     ("BUILTIN.DF(t.tosubsidiary)", nameof(StockTransferRequestHeaderNSDTO.ToSubsidiaryName)),
                     ("BUILTIN.DF(t.transferlocation)", nameof(StockTransferRequestHeaderNSDTO.DestinationLocationName)),
                     ("BUILTIN.DF(tl.location)", nameof(StockTransferRequestHeaderNSDTO.SourceLocationName)),
+                    ("BUILTIN.DF(t.custbody_dbti_purchase_category)", nameof(StockTransferRequestHeaderNSDTO.PurchaseCategoryName)),
+                    ("BUILTIN.DF(t.custbody_dbti_purchase_subcategory)", nameof(StockTransferRequestHeaderNSDTO.PurchaseSubcategoryName)),
                     ("t.custbody_dbti_return_to_vendor", nameof(StockTransferRequestHeaderNSDTO.VendorId)),
                     ("t.subsidiary", nameof(StockTransferRequestHeaderNSDTO.SubsidiaryId)),
                     ("t.tosubsidiary", nameof(StockTransferRequestHeaderNSDTO.ToSubsidiaryId)),
                     ("t.transferlocation", nameof(StockTransferRequestHeaderNSDTO.DestinationLocationId)),
                     ("tl.location", nameof(StockTransferRequestHeaderNSDTO.SourceLocationId)),
+                    ("t.custbody_dbti_purchase_category", nameof(StockTransferRequestHeaderNSDTO.PurchaseCategoryId)),
+                    ("t.custbody_dbti_purchase_subcategory", nameof(StockTransferRequestHeaderNSDTO.PurchaseSubcategoryId)),
                     ("t.memo", nameof(StockTransferRequestHeaderNSDTO.Remarks)),
                     ("t.custbody_dbti_transfer_category", nameof(StockTransferRequestHeaderNSDTO.TransferCategoryId)),
                     ("s.name", nameof(StockTransferRequestHeaderNSDTO.StatusName)),
@@ -186,6 +194,8 @@ internal class StockTransferRequestIntegration(
         dto.DestinationLocation = new() { Name = nsdto.DestinationLocationName, Id = nsdto.DestinationLocationId };
         dto.Subsidiary = new() { Name = nsdto.SubsidiaryName, Id = nsdto.SubsidiaryId };
         dto.ToSubsidiary = new() { Name = nsdto.ToSubsidiaryName, Id = nsdto.ToSubsidiaryId };
+        dto.PurchaseCategory = new() { Name = nsdto.PurchaseCategoryName, Id = nsdto.PurchaseCategoryId };
+        dto.PurchaseSubcategory = new() { Name = nsdto.PurchaseSubcategoryName, Id = nsdto.PurchaseSubcategoryId };
         dto.Status = new() { Name = nsdto.StatusName, Id = nsdto.StatusId };
         dto.IsEditable = !nsdto.IsSubmittedForApprovals && (nsdto.StatusId == 3 || nsdto.StatusId == 2);
         dto.TransferCategory = nsdto.TransferCategoryId switch
@@ -355,6 +365,8 @@ internal class StockTransferRequestIntegration(
             custbody_dbti_transfer_category = new { id = dto.TransferCategory.Id },
             custbody_dbti_prepared_by = dto.PreparedById,
             custbody_dbti_return_to_vendor = dto.TransferCategory.IsReturn && dto.Vendor != null ? new { id = dto.Vendor.Id.ToString() } : null,
+            custbody_dbti_purchase_category = dto.PurchaseSubcategory != null ? dto.PurchaseSubcategory.PurchaseCategoryId : dto.PurchaseCategory?.Id ?? null,
+            custbody_dbti_purchase_subcategory = dto.PurchaseSubcategory?.Id ?? null,
             Department = new { id = "4" },
             Class = new { id = "1" },
             Memo = dto.Remarks,

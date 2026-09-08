@@ -1,4 +1,5 @@
 ﻿using Application.DataTransferObjects.Others;
+using Application.DataTransferObjects.Transactions.SupplierReturn;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,8 @@ public class StockTransferRequestInfoDTO
     public LocationDTO? DestinationLocation { get; set; } = null;
     public SubsidiaryDTO? Subsidiary { get; set; } = null;
     public SubsidiaryDTO? ToSubsidiary { get; set; } = null;
+    public PurchaseCategoryDTO? PurchaseCategory { get; set; }
+    public PurchaseSubCategoryDTO? PurchaseSubcategory { get; set; }
     public TransferOrderStatus? Status { get; set; } = null;
     public string PreparedBy { get; set; } = string.Empty;
     public string Remarks { get; set; } = string.Empty;
