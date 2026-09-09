@@ -24,14 +24,21 @@
 
     <!-- Good Qty -->
     <RadzenStack Gap="4px">
-        <RadzenText Text="@(DontShowBad ? "Good Qty" : "Quantity")" TextStyle="TextStyle.Caption" class="rz-m-0 good-label" />
+        <RadzenText Text="@(ShowBadIfZero ? "Good Qty" : "Quantity")" TextStyle="TextStyle.Caption" class="rz-m-0 good-label" />
         <RadzenNumeric @bind-Value="@GoodQty"
                         Min="0"
                         class="rz-w-100 good-field" />
     </RadzenStack>
 
     <!-- Bad Qty -->
-    <RadzenStack Gap="4px" Visible="@DontShowBad">
+    <RadzenStack Gap="4px" Visible="@ShowBadIfZero">
+        <RadzenText Text="Bad Qty" TextStyle="TextStyle.Caption" class="rz-m-0 bad-label" />
+        <RadzenNumeric @bind-Value="@BadQty"
+                        Min="0"
+                        class="rz-w-100 bad-field" />
+
+    <!-- Missing Qty -->
+    <RadzenStack Gap="4px" Visible="@ShowMissingIfZero">
         <RadzenText Text="Bad Qty" TextStyle="TextStyle.Caption" class="rz-m-0 bad-label" />
         <RadzenNumeric @bind-Value="@BadQty"
                         Min="0"

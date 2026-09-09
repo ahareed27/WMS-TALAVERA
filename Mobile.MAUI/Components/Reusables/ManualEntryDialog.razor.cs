@@ -6,33 +6,37 @@ public partial class ManualEntryDialog
 
     [Parameter] public string ItemName { get; set; } = string.Empty;
     [Parameter] public decimal PlannedQty { get; set; }
-    [Parameter] public int NoBad { get; set; } = 0;
+    [Parameter] public int ShowBad { get; set; } = 0; // if zero then show.
+    [Parameter] public int ShowMissing { get; set; } = 0; // if zero then show.
 
 
-    private bool DontShowBad => NoBad != 1;
+    private bool ShowBadIfZero => ShowBad != 1;
+    private bool ShowMissingIfZero => ShowMissing != 1;
     private decimal RemainingQty => PlannedQty - (GoodQty + BadQty);
     private decimal GoodQty { get; set; } = 0;
     private decimal BadQty { get; set; } = 0;
+    private decimal MissingQty { get; set; } = 0;
     private string? ValidationMessage { get; set; }
 
     private void OnConfirm()
     {
-        if (GoodQty + BadQty > PlannedQty)
+        if (GoodQty + BadQty + MissingQty > PlannedQty)
         {
-            ValidationMessage = $"Good + Bad Qty cannot exceed Planned Quantity).";
+            ValidationMessage = $"Total Qty cannot exceed Planned Quantity).";
             return;
         }
 
-        if (GoodQty + BadQty <= 0)
+        if (GoodQty + BadQty + MissingQty <= 0)
         {
-            ValidationMessage = "Enter a Good or Bad quantity greater than 0.";
+            ValidationMessage = "Enter a Good, Bad, or Missing Quantity greater than 0.";
             return;
         }
 
         DialogService.Close(new ManualEntryResult
         {
             GoodQty = GoodQty,
-            BadQty = BadQty
+            BadQty = BadQty,
+            MissingQty = MissingQty
         });
     }
 
@@ -45,5 +49,6 @@ public partial class ManualEntryDialog
     {
         public decimal GoodQty { get; set; }
         public decimal BadQty { get; set; }
+        public decimal MissingQty { get; set; }
     }
 }

@@ -34,6 +34,7 @@ public class CustomEnum
     {
         Base = 0,
         Good = 1,
-        Bad = 2
+        Bad = 2,
+        Missing = 3
     }
 }

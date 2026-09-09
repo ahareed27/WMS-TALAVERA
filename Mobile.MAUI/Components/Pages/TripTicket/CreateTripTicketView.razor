@@ -34,7 +34,7 @@
                                                         class="trans-number" />
 
                                             <RadzenText class="trans-detail"
-                                                        Text="@($"Document Date: {row.NetsuiteOrderCreatedDate:MMMM d, yyyy}")" />
+                                                        Text="@($"Document Date: {(row.NetsuiteOrderCreatedDate == DateTime.MinValue ? "N/A" : row.NetsuiteOrderCreatedDate.ToString("MMMM d, yyyy"))}")" />
                                         </RadzenStack>
 
                                         <RadzenStack Orientation="Orientation.Horizontal" Gap="6px" class="trans-badges">
@@ -61,7 +61,7 @@
                                                         class="trans-number" />
 
                                             <RadzenText class="trans-detail"
-                                                        Text="@($"Document Date: {row.NetsuiteOrderCreatedDate:MMMM d, yyyy}")" />
+                                                        Text="@($"Document Date: {(row.NetsuiteOrderCreatedDate == DateTime.MinValue ? "N/A" : row.NetsuiteOrderCreatedDate.ToString("MMMM d, yyyy"))}")" />
                                         </RadzenStack>
 
                                         <RadzenStack Orientation="Orientation.Horizontal" Gap="6px" class="trans-badges">

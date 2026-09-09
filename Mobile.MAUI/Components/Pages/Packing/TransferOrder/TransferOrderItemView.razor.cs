@@ -265,7 +265,8 @@ public partial class TransferOrderItemView : IAsyncDisposable
                     new Dictionary<string, object>
                     {
                         { "ItemName", item.MaterialName },
-                        { "PlannedQty", item.NSLineQuantityReceived }
+                        { "PlannedQty", item.NSLineQuantityReceived },
+                        { "ShowMissing", 1}
                     },
                     new DialogOptions
                     {
